@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tetris!</title>
+
+		<script src=".\tetris\tetris.js"></script>
+
+		<style type="text/css">
+		<!--
+		body
+		{
+			background-image:url();
+		}
+		div
+		{
+			position:absolute;
+		}
+		-->
+		</style>
+	</head>
+
+	<body>
+		<center>
+			<p style="font-size:24.0pt;font-family:Haettenschweiler">
+					Tetris!
+			</p>
+		</center>
+		<hr>
+
+		<center>
+			<table width="450px" height="400px" border="2" 
+				cellpadding="0" cellspacing="0" bgcolor="white">
+				<tr height="400px">
+					<td width="205px">
+						<table width="100%" height="100%" border="0" 
+							cellpadding="0" cellspacing="0" bgcolor="white">
+							<tr height="1px">
+								<td width="1px">
+									<div id="board1"></div>
+								</td>
+							</tr>
+							<tr height="399px">
+							</tr>
+						</table>
+					</td>
+					<td width="245px">
+						<table width="100%" height="100%" border="0" 
+							cellpadding="0" cellspacing="0" bgcolor="white">
+							<tr height="100px">
+								<td></td>
+								<td id="score"><center>Score:0</center></td>
+								<td></td>
+							</tr>
+							<tr height="100px">
+								<td></td>
+								<td><center>
+									<image src=".\\tetris\\turnImage.png" id="turn" onMouseDown="onTurn();"></image>
+								</center></td>
+								<td></td>
+							</tr>
+							<tr height="100px">
+								<td><center>
+									<image src=".\\tetris\\leftImage.png" id="left" onMouseDown="onLeft();"></image>
+								</center></td>
+								<td><center>
+									<image src=".\\tetris\\downImage.png" id="down" onMouseDown="onDown();"></image>
+								</center></td>
+								<td><center>
+									<image src=".\\tetris\\rightImage.png" id="right" onMouseDown="onRight();"></imgae>
+								</center></td>
+							</tr>
+							<tr height="100px">
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</center>
+
+		<script>
+			var boards;
+
+			boards={};
+			Tetris.regSingleBlock(new Tetris.singleBlock("red",".\\tetris\\redBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("orange",".\\tetris\\orangeBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("yellow",".\\tetris\\yellowBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("green",".\\tetris\\greenBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("blue",".\\tetris\\blueBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("purple",".\\tetris\\purpleBlock.png"));
+			Tetris.regSingleBlock(new Tetris.singleBlock("black",".\\tetris\\blackBlock.png"));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"O",
+				[
+					"    ",
+					" XX ",
+					" XX ",
+					"    ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("red"),
+				},
+				4
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"L",
+				[
+					"     ",
+					" X   ",
+					" X   ",
+					" XX  ",
+					"     ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("orange"),
+				},
+				5
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"J",
+				[
+					"     ",
+					"   X ",
+					"   X ",
+					"  XX ",
+					"     ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("yellow"),
+				},
+				5
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"S",
+				[
+					"     ",
+					"     ",
+					"  XX ",
+					" XX  ",
+					"     ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("green"),
+				},
+				5
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"Z",
+				[
+					"     ",
+					"     ",
+					" XX  ",
+					"  XX ",
+					"     ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("blue"),
+				},
+				5
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"T",
+				[
+					"     ",
+					"     ",
+					" XXX ",
+					"  X  ",
+					"     ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("purple"),
+				},
+				5
+				));
+			Tetris.regBlockSets(new Tetris.blockSet(
+				"I",
+				[
+					"     ",
+					"  X  ",
+					"  X  ",
+					"  X  ",
+					"  X  ",
+				],
+				{
+					'X':Tetris.getSingleBlockIdByName("black"),
+				},
+				5
+				));
+			
+			boards[0]=new Tetris.board("board1",10,20,20);
+			
+			/*var i,j;
+			i=0;
+			while(i<20)
+			{
+				j=0;
+				while(j<10)
+				{
+					boards[0].setBlock(j,i,(i+j)%7+1);
+					j++;
+				}
+				i++;
+			}*/
+			boards[0].drawAll();
+			
+			var ny=-1;
+			var nx=2;
+			var nside=0;
+			
+			var onLeft=function()
+			{
+				nx--;
+				if(boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+				{
+					nx++;
+				}
+			}
+			var onRight=function()
+			{
+				nx++;
+				if(boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+				{
+					nx--;
+				}
+			}
+			var onTurn=function()
+			{
+				nside++;
+				nside%=4;
+				if(boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+				{
+					nside--;nside%=4;
+				}
+			}
+			var onDown=function()
+			{
+				while(!boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+				{
+					ny++;
+				}
+				ny--;
+			}
+			var randomBlockId=function()
+			{
+				var blockSetNames="OLJSZTI";
+				return Tetris.getBlockSetIdByName(""+
+						blockSetNames.
+							charAt(
+								Math.floor(Math.random()*blockSetNames.length)));
+				//return Tetris.getBlockSetIdByName("O");
+			}
+			
+			var timer;
+			var nowbs=randomBlockId();
+			var sco=0;
+			var a=function()
+			{
+				var i,j;
+				/*boards[0].cleanAll();
+				boards[0].drawAll();
+				boards[0].drawBlockSet(nx,ny,nowbs,nside);*/
+				ny++;
+				if(boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+				{
+					ny--;
+					boards[0].setBlockSetToMap(nx,ny,nowbs,nside);
+					sco+=boards[0].cleanLines()*10;
+					document.getElementById("score").innerHTML="<center>Score:"+sco+"</center>";
+					nowbs=randomBlockId();
+					ny=-1;
+					nx=2;
+					nside=0;
+					if(boards[0].isBlockSetHitMap(nx,ny,nowbs,nside))
+					{
+						clearInterval(flushTimer);
+						clearInterval(timer);
+						alert("Game over!Your score:"+sco+".\nDo better next time!");
+					}
+				}
+			}
+			timer=setInterval(a,500);
+			var b=function()
+			{
+				boards[0].cleanAll();
+				boards[0].drawAll();
+				boards[0].drawBlockSet(nx,ny,nowbs,nside);
+			}
+			var flushTimer=setInterval(b,20);
+		</script>
+	</body>
+</html>
